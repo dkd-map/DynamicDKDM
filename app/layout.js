@@ -5,10 +5,8 @@ export const metadata = {
   description: 'Interactive parametric ODE models for 24 DKD-relevant kidney cell types.',
 }
 
-/* ── Logos referenced from the main site (public assets, no copy needed) ── */
 const LOGOS = [
-  { name: 'RMRC', url: 'https://rmrc.mui.ac.ir/',          src: 'https://dkd-map.github.io/assets/logos/rmrc.png' },
-  { name: 'Isfahan University', url: 'https://www.mui.ac.ir/en', src: 'https://dkd-map.github.io/assets/logos/isfahan.png' },
+  { name: 'RMRC', url: 'https://rmrc.mui.ac.ir/', src: 'https://dkd-map.github.io/assets/logos/rmrc.png' },
   { name: 'University of Luxembourg', url: 'https://www.uni.lu/lcsb-en/', src: 'https://dkd-map.github.io/assets/logos/luxembourg.png' },
 ]
 
@@ -17,7 +15,6 @@ function SiteHeader() {
     <header className="site-header">
       <div className="header-inner">
         <div className="header-top">
-          {/* Brand */}
           <a className="brand" href="/">
             <span className="brand-mark">DKDM</span>
             <span>
@@ -25,7 +22,6 @@ function SiteHeader() {
               <div className="brand-sub">Parametric ODE Network Atlas — Diabetic Kidney Disease</div>
             </span>
           </a>
-          {/* Logos */}
           <div className="header-logos">
             {LOGOS.map(l => (
               <a key={l.name} href={l.url} target="_blank" rel="noopener" title={l.name}>
@@ -35,7 +31,6 @@ function SiteHeader() {
             ))}
           </div>
         </div>
-        {/* Nav */}
         <div className="header-bottom">
           <ul className="site-nav">
             <li><a href="https://dkd-map.github.io/" className="back-link">← Main DKDM Site</a></li>
@@ -76,7 +71,6 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <SiteHeader />
-        {/* Offset fixed header + footer */}
         <div style={{ paddingTop: 'var(--header-h)', paddingBottom: 'var(--footer-h)', minHeight: '100vh' }}>
           {children}
         </div>
