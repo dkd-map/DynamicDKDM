@@ -31,6 +31,127 @@ const EDGE_TYPE_CONFIG = {
   catalysis:   { color:'#059669', style:'solid',  label:'Catalysis',    desc:'K(n,1)·[E]·[S] → [P]' },
 }
 
+/* ══════════════════════════════════════════════════════════════
+   HELP POPUP — appears once per session when the graph loads
+   ══════════════════════════════════════════════════════════════ */
+function HelpPopup({ cellLabel, onClose }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9000,
+      background: 'rgba(20, 10, 50, 0.6)',
+      backdropFilter: 'blur(5px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: 24,
+      animation: 'dkdmFadeIn 0.3s ease',
+    }}
+      onClick={onClose}
+    >
+      <style>{`
+        @keyframes dkdmFadeIn { from { opacity:0 } to { opacity:1 } }
+        @keyframes dkdmSlideUp { from { transform:translateY(24px) scale(.97); opacity:0 } to { transform:none; opacity:1 } }
+        .dkdm-popup-step { display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; }
+        .dkdm-popup-num {
+          flex:none; width:30px; height:30px; border-radius:50%;
+          background:linear-gradient(135deg,#7C5BD0,#3E2C73);
+          color:#fff; font-weight:700; font-size:0.85rem;
+          display:flex; align-items:center; justify-content:center;
+          margin-top:1px; box-shadow:0 2px 8px rgba(124,91,208,.4);
+        }
+        .dkdm-popup-step p { margin:0; font-size:0.93rem; line-height:1.55; color:#241B3A; }
+        .dkdm-popup-step strong { color:#3E2C73; }
+        .dkdm-tag {
+          display:inline-block; font-size:0.72rem; font-family:ui-monospace,monospace;
+          padding:2px 8px; border-radius:999px; margin:0 2px;
+          background:#ede9fe; color:#3E2C73; border:1px solid #c4b5fd;
+        }
+      `}</style>
+
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background:'#fff', borderRadius:22, maxWidth:520, width:'100%',
+          boxShadow:'0 32px 80px rgba(62,44,115,.35), 0 4px 16px rgba(0,0,0,.1)',
+          overflow:'hidden',
+          animation:'dkdmSlideUp 0.35s cubic-bezier(0.22,1,0.36,1)',
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          background:'linear-gradient(135deg,#3E2C73 0%,#7C5BD0 100%)',
+          padding:'26px 28px 20px', color:'#fff', position:'relative',
+        }}>
+          <div style={{
+            fontSize:'0.68rem', letterSpacing:'0.18em', textTransform:'uppercase',
+            opacity:0.65, fontFamily:'ui-monospace,monospace', marginBottom:6,
+          }}>
+            Dynamic DKDM · ODE Network Explorer
+          </div>
+          <h2 style={{
+            margin:'0 0 6px', fontSize:'1.4rem', fontWeight:700, color:'#fff', lineHeight:1.2,
+          }}>
+            How to Explore: {cellLabel}
+          </h2>
+          <p style={{ margin:0, opacity:0.78, fontSize:'0.88rem', lineHeight:1.5 }}>
+            This is a parametric ODE reaction network (SBML Level 3). Follow these steps to navigate.
+          </p>
+          <button
+            onClick={onClose}
+            style={{
+              position:'absolute', top:14, right:16,
+              background:'rgba(255,255,255,0.18)', border:'none', borderRadius:'50%',
+              width:32, height:32, cursor:'pointer', color:'#fff', fontSize:'1.1rem',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              transition:'background .15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.32)'}
+            onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.18)'}
+            aria-label="Close help"
+          >×</button>
+        </div>
+
+        {/* Steps */}
+        <div style={{ padding:'22px 28px 26px' }}>
+          <div className="dkdm-popup-step">
+            <span className="dkdm-popup-num">1</span>
+            <p><strong>Navigate the graph</strong> — use <span className="dkdm-tag">scroll</span> to zoom in/out and <span className="dkdm-tag">drag</span> to pan across the network.</p>
+          </div>
+          <div className="dkdm-popup-step">
+            <span className="dkdm-popup-num">2</span>
+            <p><strong>Click any node</strong> (molecular species) to open its governing ODE equation d[X]/dt and see which reactions produce or consume it.</p>
+          </div>
+          <div className="dkdm-popup-step">
+            <span className="dkdm-popup-num">3</span>
+            <p><strong>Click any edge</strong> (reaction arrow) to inspect the kinetic rate law V(n) and reaction type: <span className="dkdm-tag">association</span>, <span className="dkdm-tag">catalysis</span>, <span className="dkdm-tag">degradation</span>.</p>
+          </div>
+          <div className="dkdm-popup-step" style={{ marginBottom:0 }}>
+            <span className="dkdm-popup-num">4</span>
+            <p><strong>Filter by molecule type</strong> using the toolbar above: <span className="dkdm-tag">Protein</span> <span className="dkdm-tag">Phospho</span> <span className="dkdm-tag">Gene</span> <span className="dkdm-tag">mRNA</span>. Download the SBML model or Reactions CSV from the top bar.</p>
+          </div>
+
+          <button
+            onClick={onClose}
+            style={{
+              marginTop:22, width:'100%',
+              background:'linear-gradient(135deg,#3E2C73,#7C5BD0)',
+              color:'#fff', border:'none', borderRadius:999,
+              padding:'12px 24px', fontSize:'0.95rem', fontWeight:700,
+              cursor:'pointer', fontFamily:'inherit',
+              boxShadow:'0 4px 18px rgba(124,91,208,.4)',
+              transition:'opacity .15s, transform .15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.opacity='0.88'; e.currentTarget.style.transform='translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.opacity='1'; e.currentTarget.style.transform='none' }}
+          >
+            Start Exploring →
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+
 function DownloadBtn({ href, label }) {
   return (
     <a href={href} download className="btn btn-ghost btn-sm"
@@ -42,7 +163,6 @@ function DownloadBtn({ href, label }) {
   )
 }
 
-/* ── Sub-header bar (sits below layout header, styled with main-site palette) */
 function NetworkBar({ cellLabel, celltype, data, filter, setFilter }) {
   const router = useRouter()
   return (
@@ -97,7 +217,13 @@ export default function NetworkClient({ celltype: celltypeProp }) {
   const [selectedNode, setSelectedNode] = useState(null)
   const [selectedEdge, setSelectedEdge] = useState(null)
   const [filter, setFilter] = useState('all')
+  const [showPopup, setShowPopup] = useState(false)
   const cellLabel = CELL_LABELS[celltype] || celltype
+
+  // Show popup on every fresh navigation to a cell network page
+  useEffect(() => {
+    setShowPopup(true)
+  }, [celltype])
 
   useEffect(() => {
     if (!celltype) return
@@ -108,49 +234,49 @@ export default function NetworkClient({ celltype: celltypeProp }) {
       .catch(e => { setError(e.message); setLoading(false) })
   }, [celltype])
 
+  const closePopup = useCallback(() => {
+    setShowPopup(false)
+  }, [])
+
   const handleSelectNode = useCallback(n => { setSelectedNode(n); setSelectedEdge(null) }, [])
   const handleSelectEdge = useCallback(e => { setSelectedEdge(e); setSelectedNode(null) }, [])
 
-  /* ── graph area height: viewport minus fixed header, footer, and sub-bar ── */
-  const graphH = 'calc(100vh - var(--header-h) - var(--footer-h) - 52px)'
-
   return (
-    <div style={{ display:'flex', flexDirection:'column', height:`calc(100vh - var(--header-h) - var(--footer-h))`, overflow:'hidden' }}>
-      <NetworkBar cellLabel={cellLabel} celltype={celltype} data={data} filter={filter} setFilter={setFilter} />
-
-      <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
-        {/* Loading */}
-        {loading && (
-          <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:14, background:'var(--paper)' }}>
-            <div style={{ width:40, height:40, border:'4px solid var(--line)', borderTopColor:'var(--violet)', borderRadius:'50%', animation:'spin .8s linear infinite' }} />
-            <div style={{ fontFamily:'var(--font-display)', fontSize:15, color:'var(--indigo)', fontWeight:600 }}>Loading {cellLabel}…</div>
-            <div style={{ fontFamily:'var(--font-mono)', fontSize:12, color:'var(--ink-soft)' }}>Parsing SBML model</div>
-          </div>
-        )}
-        {/* Error */}
-        {error && (
-          <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', background:'var(--paper)' }}>
-            <div style={{ background:'var(--card)', border:`2px solid var(--crimson)`, borderRadius:16, padding:'36px 44px', maxWidth:460, textAlign:'center', boxShadow:'var(--shadow-lg)' }}>
-              <div style={{ fontSize:32, marginBottom:14 }}>⚠️</div>
-              <h2 style={{ color:'var(--crimson)', marginBottom:10 }}>File Not Found</h2>
-              <p style={{ color:'var(--ink-soft)', fontSize:14, lineHeight:1.6 }}>{error}</p>
+    <>
+      {showPopup && <HelpPopup cellLabel={cellLabel} onClose={closePopup} />}
+      <div style={{ display:'flex', flexDirection:'column', height:`calc(100vh - var(--header-h) - var(--footer-h))`, overflow:'hidden' }}>
+        <NetworkBar cellLabel={cellLabel} celltype={celltype} data={data} filter={filter} setFilter={setFilter} />
+        <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
+          {loading && (
+            <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:14, background:'var(--paper)' }}>
+              <div style={{ width:40, height:40, border:'4px solid var(--line)', borderTopColor:'var(--violet)', borderRadius:'50%', animation:'spin .8s linear infinite' }} />
+              <div style={{ fontFamily:'var(--font-display)', fontSize:15, color:'var(--indigo)', fontWeight:600 }}>Loading {cellLabel}…</div>
+              <div style={{ fontFamily:'var(--font-mono)', fontSize:12, color:'var(--ink-soft)' }}>Parsing SBML model</div>
             </div>
-          </div>
-        )}
-        {/* Graph + sidebar */}
-        {data && !loading && (
-          <>
-            <NetworkGraph data={data} filter={filter} onSelectNode={handleSelectNode} onSelectEdge={handleSelectEdge} />
-            <div style={{ width:300, background:'var(--card)', borderLeft:'1px solid var(--line)',
-              display:'flex', flexDirection:'column', flexShrink:0, overflowY:'auto', boxShadow:'-3px 0 12px rgba(36,27,58,.06)' }}>
-              {!selectedNode && !selectedEdge && <DefaultPanel data={data} cellLabel={cellLabel} celltype={celltype} />}
-              {selectedNode && <NodePanel node={selectedNode} data={data} onClose={() => setSelectedNode(null)} />}
-              {selectedEdge && <EdgePanel edge={selectedEdge} onClose={() => setSelectedEdge(null)} />}
+          )}
+          {error && (
+            <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', background:'var(--paper)' }}>
+              <div style={{ background:'var(--card)', border:`2px solid var(--crimson)`, borderRadius:16, padding:'36px 44px', maxWidth:460, textAlign:'center', boxShadow:'var(--shadow-lg)' }}>
+                <div style={{ fontSize:32, marginBottom:14 }}>⚠️</div>
+                <h2 style={{ color:'var(--crimson)', marginBottom:10 }}>File Not Found</h2>
+                <p style={{ color:'var(--ink-soft)', fontSize:14, lineHeight:1.6 }}>{error}</p>
+              </div>
             </div>
-          </>
-        )}
+          )}
+          {data && !loading && (
+            <>
+              <NetworkGraph data={data} filter={filter} onSelectNode={handleSelectNode} onSelectEdge={handleSelectEdge} />
+              <div style={{ width:300, background:'var(--card)', borderLeft:'1px solid var(--line)',
+                display:'flex', flexDirection:'column', flexShrink:0, overflowY:'auto', boxShadow:'-3px 0 12px rgba(36,27,58,.06)' }}>
+                {!selectedNode && !selectedEdge && <DefaultPanel data={data} cellLabel={cellLabel} celltype={celltype} />}
+                {selectedNode && <NodePanel node={selectedNode} data={data} onClose={() => setSelectedNode(null)} />}
+                {selectedEdge && <EdgePanel edge={selectedEdge} onClose={() => setSelectedEdge(null)} />}
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -294,7 +420,7 @@ function ReactionList({ title, items, color, expanded, onToggle }) {
   )
 }
 
-/* ── SBML parser (unchanged) ────────────────────────────── */
+/* ── SBML parser ────────────────────────────────────────── */
 function parseSBML(xmlText) {
   const parser = new DOMParser()
   const doc = parser.parseFromString(xmlText, 'text/xml')
