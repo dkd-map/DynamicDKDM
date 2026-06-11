@@ -67,8 +67,8 @@ export default function AtlasHome() {
             <p style={{ fontFamily: 'var(--font-mono)', fontSize: '.72rem', letterSpacing: '.18em', textTransform: 'uppercase', opacity: .75, marginBottom: 8 }}>
               Diabetic Kidney Disease Map
             </p>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 700, lineHeight: 1.1, marginBottom: 10 }}>
-              Parametric ODE Interaction Networks
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 700, lineHeight: 1.1, marginBottom: 10, color: 'var(--paper-2)' }}>
+            Parametric ODE Interaction Networks
             </h1>
             <p style={{ fontSize: '.95rem', opacity: .9, maxWidth: 480, lineHeight: 1.65 }}>
               {CELL_TYPES.length} DKD-relevant kidney cell types modelled as parametric ODEs (SBML Level 3).
