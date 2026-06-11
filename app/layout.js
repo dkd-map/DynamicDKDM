@@ -5,6 +5,8 @@ export const metadata = {
   description: 'Interactive parametric ODE models for 24 DKD-relevant kidney cell types.',
 }
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || ''
+
 const LOGOS = [
   { name: 'RMRC', url: 'https://rmrc.mui.ac.ir/', src: 'https://dkd-map.github.io/assets/logos/rmrc.png' },
   { name: 'University of Luxembourg', url: 'https://www.uni.lu/lcsb-en/', src: 'https://dkd-map.github.io/assets/logos/luxembourg.png' },
@@ -16,7 +18,9 @@ function SiteHeader() {
       <div className="header-inner">
         <div className="header-top">
           <a className="brand" href="/">
-            <span className="brand-mark">DKDM</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`${BASE}/data/DKDM_logo.png`} alt="Dynamic DKDM logo"
+              style={{ height: 48, width: 'auto', display: 'block' }} />
             <span>
               <div className="brand-title">Dynamic DKDM</div>
               <div className="brand-sub">Parametric ODE Network Atlas — Diabetic Kidney Disease</div>
